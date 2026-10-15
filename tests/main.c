@@ -12,25 +12,60 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include "libasm.h"
+
+static void	test_strcmp(const char *s1, const char *s2)
+{
+	int	ft;
+	int	libc;
+
+	ft = ft_strcmp(s1, s2);
+	libc = strcmp(s1, s2);
+	printf("\"%s\" / \"%s\" : %s (ft=%d, libc=%d)\n", s1, s2,
+		((ft > 0) - (ft < 0)) == ((libc > 0) - (libc < 0)) ? "OK" : "KO",
+		ft, libc);
+}
+
+static void	test_write(void)
+{
+	const char	message[] = "message écrit avec ft_write\n";
+	ssize_t		result;
+
+	printf("\n=== FT_WRITE ===\n");
+	fflush(stdout);
+	result = ft_write(1, message, sizeof(message) - 1);
+	printf("écriture : %s (retour=%zd)\n",
+		result == (ssize_t)(sizeof(message) - 1) ? "OK" : "KO", result);
+	errno = 0;
+	result = ft_write(-1, message, sizeof(message) - 1);
+	printf("erreur   : %s (retour=%zd, errno=%d)\n",
+		result == -1 && errno == EBADF ? "OK" : "KO", result, errno);
+}
 
 int	main(void)
 {
-	char	str[] = "salut";
 	char	src[] = "bonjour";
-	char	ft_dest[100] = {0};
-	char	libc_dest[100] = {0};
-	char	*ft_return;
-	char	*libc_return;
+	char	ft_dest[20] = "XXXXXXXX";
+	char	libc_dest[20] = "XXXXXXXX";
+	char	*result;
 
-	printf("ft_strlen('%s') = %zu\n", str, ft_strlen(str));
-	printf("strlen('%s') = %zu\n", str, strlen(str));
-	ft_return = ft_strcpy(ft_dest, src);
-	libc_return = strcpy(libc_dest, src);
-	printf("ft_strcpy: '%s'\n", ft_dest);
-	printf("strcpy:    '%s'\n", libc_dest);
-	printf("contenu:   %s\n", strcmp(ft_dest, libc_dest) == 0 ? "OK" : "KO");
-	printf("retour:    %s\n", ft_return == ft_dest
-		&& libc_return == libc_dest ? "OK" : "KO");
-    return (0);
+	printf("=== FT_STRLEN ===\n");
+	printf("attendu : %zu\n", strlen(src));
+	printf("obtenu  : %zu\n", ft_strlen(src));
+	result = ft_strcpy(ft_dest, src);
+	strcpy(libc_dest, src);
+	printf("\n=== FT_STRCPY ===\n");
+	printf("source  : \"%s\"\n", src);
+	printf("attendu : \"%s\"\n", libc_dest);
+	printf("obtenu  : \"%s\"\n", ft_dest);
+	printf("contenu : %s\n", strcmp(ft_dest, libc_dest) == 0 ? "OK" : "KO");
+	printf("retour  : %s\n", result == ft_dest ? "OK" : "KO");
+	printf("\n=== FT_STRCMP ===\n");
+	test_strcmp("abc", "abc");
+	test_strcmp("abc", "abd");
+	test_strcmp("abd", "abc");
+	test_strcmp("", "abc");
+	test_write();
+	return (0);
 }

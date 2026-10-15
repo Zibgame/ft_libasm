@@ -6,7 +6,7 @@
 ;    By: zcadinot <zcadinot@student.42lehavre.      +#+  +:+       +#+         ;
 ;                                                 +#+#+#+#+#+   +#+            ;
 ;    Created: 2026/10/15 10:38:55 by zcadinot          #+#    #+#              ;
-;    Updated: 2026/10/15 12:44:17 by zcadinot         ###   ########.fr        ;
+;    Updated: 2026/10/15 13:23:53 by zcadinot         ###   ########.fr        ;
 ;                                                                              ;
 ; **************************************************************************** ;
 
@@ -18,11 +18,14 @@ ft_strcpy:
 xor rax, rax
 
 .loop:
+    mov dl, [rsi + rax]
+    mov [rdi + rax], dl
     cmp byte [rsi + rax], 0
     je .end
-    mov [rdi + rax], [rsi + rax]
+
     inc rax
-    je .loop
+    jmp .loop
 
 .end:
+    mov rax, rdi
     ret
