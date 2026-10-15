@@ -6,7 +6,7 @@
 ;    By: zcadinot <zcadinot@student.42lehavre.      +#+  +:+       +#+         ;
 ;                                                 +#+#+#+#+#+   +#+            ;
 ;    Created: 2026/10/15 15:00:00 by zcadinot          #+#    #+#              ;
-;    Updated: 2026/10/15 15:40:10 by zcadinot         ###   ########.fr        ;
+;    Updated: 2026/10/15 15:43:13 by zcadinot         ###   ########.fr        ;
 ;                                                                              ;
 ; **************************************************************************** ;
 
@@ -29,5 +29,6 @@ ft_strdup:
 	call ft_strcpy
 
 .end:
-	add [rsp], 8
+	add rsp, 8
 	ret
+
