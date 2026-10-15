@@ -10,7 +10,10 @@ CPPFLAGS		= -Iincludes
 SRC			= src/ft_strlen.s \
 			  src/ft_strcpy.s \
 			  src/ft_strcmp.s \
-			  src/ft_write.s
+			  src/ft_write.s \
+			  src/ft_read.s \
+			  src/ft_strdup.s \
+			  src/ft_calloc.s
 OBJ			= $(SRC:.s=.o)
 
 TEST			= test_libasm
@@ -23,6 +26,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(AR) $@ $^
+	rm -f $(OBJ)
 
 %.o: %.s
 	$(NASM) $(NASMFLAGS) $< -o $@

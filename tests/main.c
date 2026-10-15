@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include "libasm.h"
 
 static void	test_strcmp(const char *s1, const char *s2)
@@ -43,6 +45,49 @@ static void	test_write(void)
 		result == -1 && errno == EBADF ? "OK" : "KO", result, errno);
 }
 
+static void	test_read(void)
+{
+	char	buffer[20] = {0};
+	int		pipe_fd[2];
+	ssize_t	result;
+
+	printf("\n=== FT_READ ===\n");
+	if (pipe(pipe_fd) == -1)
+		return (perror("pipe"));
+	write(pipe_fd[1], "bonjour", 7);
+	close(pipe_fd[1]);
+	errno = 0;
+	result = ft_read(pipe_fd[0], buffer, sizeof(buffer) - 1);
+	close(pipe_fd[0]);
+	printf("lecture  : %s (retour=%zd, buffer=\"%s\")\n",
+		result == 7 && strcmp(buffer, "bonjour") == 0 ? "OK" : "KO",
+		result, buffer);
+	errno = 0;
+	result = ft_read(-1, buffer, sizeof(buffer));
+	printf("erreur   : %s (retour=%zd, errno=%d)\n",
+		result == -1 && errno == EBADF ? "OK" : "KO", result, errno);
+}
+
+static void	test_strdup(void)
+{
+	const char	*src;
+	char		*copy;
+
+	src = "bonjour";
+	copy = ft_strdup(src);
+	printf("\n=== FT_STRDUP ===\n");
+	if (copy == NULL)
+	{
+		printf("allocation : KO\n");
+		return ;
+	}
+	printf("source    : \"%s\"\n", src);
+	printf("copie     : \"%s\"\n", copy);
+	printf("contenu   : %s\n", strcmp(copy, src) == 0 ? "OK" : "KO");
+	printf("nouvelle adresse : %s\n", copy != src ? "OK" : "KO");
+	free(copy);
+}
+
 int	main(void)
 {
 	char	src[] = "bonjour";
@@ -67,5 +112,7 @@ int	main(void)
 	test_strcmp("abd", "abc");
 	test_strcmp("", "abc");
 	test_write();
+	test_read();
+	test_strdup();
 	return (0);
 }
