@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "libasm.h"
 
 static void	test_strcmp(const char *s1, const char *s2)
@@ -88,6 +89,36 @@ static void	test_strdup(void)
 	free(copy);
 }
 
+static void	test_calloc(void)
+{
+	int		*array;
+	size_t	index;
+	int		zeroed;
+	void		*overflow;
+
+	array = ft_calloc(4, sizeof(*array));
+	printf("\n=== FT_CALLOC ===\n");
+	if (array == NULL)
+	{
+		printf("allocation : KO\n");
+		return ;
+	}
+	zeroed = 1;
+	index = 0;
+	while (index < 4)
+	{
+		if (array[index] != 0)
+			zeroed = 0;
+		index++;
+	}
+	printf("allocation : OK\n");
+	printf("zéros      : %s\n", zeroed ? "OK" : "KO");
+	free(array);
+	overflow = ft_calloc(SIZE_MAX, 2);
+	printf("overflow   : %s\n", overflow == NULL ? "OK" : "KO");
+	free(overflow);
+}
+
 int	main(void)
 {
 	char	src[] = "bonjour";
@@ -114,5 +145,6 @@ int	main(void)
 	test_write();
 	test_read();
 	test_strdup();
+	test_calloc();
 	return (0);
 }

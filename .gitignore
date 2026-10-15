@@ -1,2 +1,5 @@
-.o
+*.o
+.obj/
+libasm.a
+test_libasm
 .env
